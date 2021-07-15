@@ -6,13 +6,15 @@ RUN apt-get update; \
     luarocks cmake g++ git libluajit-5.1-dev libzmq3-dev \
     autoconf pkg-config zlib1g-dev libssl-dev libmariadb-dev-compat;
 
-RUN mkdir /xi-server
-COPY ./ /xi-server
+ARG GIT_REPO=https://github.com/project-topaz/topaz.git
+ARG GIT_BRANCH=release
 
-RUN cd /xi-server ;\
+RUN git clone --recursive ${GIT_REPO} topaz;
+
+RUN cd topaz; \
+    git checkout ${GIT_BRANCH}; \
     export CC=/usr/bin/gcc-9 ;\
     export CXX=/usr/bin/g++-9 ;\
-    ls -la ;\
     CFLAGS=-m64 CXXFLAGS=-m64 LDFLAGS=-m64 cmake . ;\
     make -j $(nproc);
 
@@ -24,19 +26,19 @@ FROM ubuntu:20.04
 RUN apt-get update; \
     apt-get install -y libmariadb-dev-compat libluajit-5.1-dev libzmq3-dev;
 
-WORKDIR /xi-server
+WORKDIR /topaz
 
-COPY --from=builder /xi-server/conf/default ./conf
-COPY --from=builder /xi-server/topaz_game .
-COPY --from=builder /xi-server/compress.dat .
-COPY --from=builder /xi-server/decompress.dat .
-COPY --from=builder /xi-server/scripts ./scripts
-COPY --from=builder /xi-server/log ./log
-#COPY --from=builder /xi-server/lib ./lib
-#COPY --from=builder /xi-server/lib64 ./lib64
-COPY --from=builder /xi-server/navmeshes ./navmeshes
+COPY --from=builder /topaz/conf/default ./conf
+COPY --from=builder /topaz/topaz_game .
+COPY --from=builder /topaz/compress.dat .
+COPY --from=builder /topaz/decompress.dat .
+COPY --from=builder /topaz/scripts ./scripts
+COPY --from=builder /topaz/log ./log
+#COPY --from=builder /topaz/lib ./lib
+#COPY --from=builder /topaz/lib64 ./lib64
+COPY --from=builder /topaz/navmeshes ./navmeshes
 
-VOLUME /xi-server/scripts
+VOLUME /topaz/scripts
 
 EXPOSE 54230/udp
 

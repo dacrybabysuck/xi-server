@@ -1,0 +1,36 @@
+FROM ubuntu:20.04 as builder
+
+RUN apt-get update; \
+    DEBIAN_FRONTEND=noninteractive \
+    apt install -y build-essential software-properties-common g++-9 \
+    luarocks cmake g++ git libluajit-5.1-dev libzmq3-dev \
+    autoconf pkg-config zlib1g-dev libssl-dev libmariadb-dev-compat;
+
+ARG GIT_REPO=https://github.com/project-topaz/topaz.git
+ARG GIT_BRANCH=release
+
+RUN git clone --recursive ${GIT_REPO} topaz;
+
+RUN cd topaz; \
+    git checkout ${GIT_BRANCH}; \
+    export CC=/usr/bin/gcc-9 ;\
+    export CXX=/usr/bin/g++-9 ;\
+    CFLAGS=-m64 CXXFLAGS=-m64 LDFLAGS=-m64 cmake . ;\
+    make -j $(nproc);
+
+COPY .env .
+COPY configure_conf_files.sh .
+RUN bash configure_conf_files.sh
+
+FROM alpine:latest
+RUN apk update; \
+    apk add bash mysql-client; \
+    mkdir -p /topaz/scripts
+
+WORKDIR /topaz
+COPY --from=builder /topaz/sql ./sql
+COPY build.sh .
+
+VOLUME ["/topaz/sql_backup"]
+
+CMD ["bash", "build.sh"]

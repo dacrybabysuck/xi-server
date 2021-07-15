@@ -104,6 +104,10 @@ xi.chocobo.renterOnTrigger = function(player, eventSucceed, eventFail)
 
             local lowLevel = (mLvl < 20) and 1 or 0
 
+            if ALWAYS_ALLOW_CHOCOBO_RENTAL == 1 then
+                lowLevel = 20
+            end
+
             player:startEvent(eventSucceed, price, currency, lowLevel)
         else
             player:startEvent(eventFail)
