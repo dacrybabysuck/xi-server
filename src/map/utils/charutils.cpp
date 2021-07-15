@@ -365,7 +365,8 @@ namespace charutils
                                "campaign_allegiance,"          // 26
                                "isstylelocked,"                // 27
                                "moghancement,"                 // 28
-                               "UNIX_TIMESTAMP(`lastupdate`) " // 29
+                               "UNIX_TIMESTAMP(`lastupdate`)," // 29
+                               "languages "                    // 30
                                "FROM chars "
                                "WHERE charid = %u";
 
@@ -449,6 +450,7 @@ namespace charutils
             PChar->setStyleLocked(Sql_GetIntData(SqlHandle, 27) == 1);
             PChar->SetMoghancement(Sql_GetUIntData(SqlHandle, 28));
             PChar->lastOnline = Sql_GetUIntData(SqlHandle, 29);
+            PChar->search.language = (uint8)Sql_GetUIntData(SqlHandle, 30);
         }
 
         LoadSpells(PChar);
@@ -5678,6 +5680,12 @@ namespace charutils
 
     int32 GetCharVar(CCharEntity* PChar, const char* var)
     {
+        if (PChar == nullptr)
+        {
+            ShowError("GetCharVar was requested for a nullptr PChar\n");
+            return 0;
+        }
+
         const char* fmtQuery = "SELECT value FROM char_vars WHERE charid = %u AND varname = '%s' LIMIT 1;";
 
         int32 ret = Sql_Query(SqlHandle, fmtQuery, PChar->id, var);
@@ -5691,6 +5699,12 @@ namespace charutils
 
     void SetCharVar(CCharEntity* PChar, const char* var, int32 value)
     {
+        if (PChar == nullptr)
+        {
+            ShowError("SetCharVar was requested for a nullptr PChar\n");
+            return;
+        }
+
         if (value == 0)
         {
             Sql_Query(SqlHandle, "DELETE FROM char_vars WHERE charid = %u AND varname = '%s' LIMIT 1;", PChar->id, var);
