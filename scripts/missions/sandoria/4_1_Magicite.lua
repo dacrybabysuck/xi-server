@@ -28,7 +28,7 @@ local mission = Mission:new(xi.mission.log_id.SANDORIA, xi.mission.id.sandoria.M
 mission.reward =
 {
     rank = 5,
-    gil = 10000,
+    gil = 100000,
     keyItem = xi.ki.MESSAGE_TO_JEUNO_SANDORIA,
 }
 
@@ -124,7 +124,7 @@ mission.sections =
                     player:delKeyItem(xi.ki.MAGICITE_ORASTONE)
 
                     if player:hasKeyItem(xi.ki.AIRSHIP_PASS) then
-                        npcUtil.giveCurrency(player, "gil", 20000)
+                        npcUtil.giveCurrency(player, "gil", 200000)
                     else
                         npcUtil.giveKeyItem(player, xi.ki.AIRSHIP_PASS)
                     end

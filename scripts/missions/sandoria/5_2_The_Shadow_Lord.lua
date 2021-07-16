@@ -26,7 +26,7 @@ local mission = Mission:new(xi.mission.log_id.SANDORIA, xi.mission.id.sandoria.T
 mission.reward =
 {
     -- Rank 6 is awarded prior to completing mission
-    gil = 20000,
+    gil = 200000,
 }
 
 local handleAcceptMission = function(player, csid, option, npc)

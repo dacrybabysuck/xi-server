@@ -27,7 +27,7 @@ local mission = Mission:new(xi.mission.log_id.SANDORIA, xi.mission.id.sandoria.R
 mission.reward =
 {
     rank = 7,
-    gil = 40000,
+    gil = 400000,
 }
 
 local handleAcceptMission = function(player, csid, option, npc)
