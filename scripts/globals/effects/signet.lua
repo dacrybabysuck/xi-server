@@ -13,16 +13,16 @@ require("scripts/globals/status")
 local effect_object = {}
 
 effect_object.onEffectGain = function(target, effect)
-    target:addLatent(tpz.latent.SIGNET_BONUS, 0, tpz.mod.DEF, 15)
-    target:addLatent(tpz.latent.SIGNET_BONUS, 0, tpz.mod.EVA, 15)
+    target:addLatent(xi.latent.SIGNET_BONUS, 0, xi.mod.DEF, 15)
+    target:addLatent(xi.latent.SIGNET_BONUS, 0, xi.mod.EVA, 15)
 
     local power = getPower(target)
 
     target:setCharVar("SIGNET_REGEN_BONUS", power[1]);
     target:setCharVar("SIGNET_REFRESH_BONUS", power[2]);
 
-    target:addMod(tpz.mod.REGEN, power[1])
-    target:addMod(tpz.mod.REFRESH, power[2])
+    target:addMod(xi.mod.REGEN, power[1])
+    target:addMod(xi.mod.REFRESH, power[2])
 
 end
 
@@ -30,20 +30,20 @@ effect_object.onEffectTick = function(target, effect)
 end
 
 effect_object.onEffectLose = function(target, effect)
-    target:delLatent(tpz.latent.SIGNET_BONUS, 0, tpz.mod.DEF, 15)
-    target:delLatent(tpz.latent.SIGNET_BONUS, 0, tpz.mod.EVA, 15)
+    target:delLatent(xi.latent.SIGNET_BONUS, 0, xi.mod.DEF, 15)
+    target:delLatent(xi.latent.SIGNET_BONUS, 0, xi.mod.EVA, 15)
 
     local regen_power = target:getCharVar("SIGNET_REGEN_BONUS");
     local refresh_power = target:getCharVar("SIGNET_REFRESH_BONUS");
 
-    target:delMod(tpz.mod.REGEN, regen_power)
-    target:delMod(tpz.mod.REFRESH, refresh_power)
+    target:delMod(xi.mod.REGEN, regen_power)
+    target:delMod(xi.mod.REFRESH, refresh_power)
 
 end
 
 function getPower(target)
 
-    local player_rank = target:getRank()
+    local player_rank = target:getRank(target:getNation())
     local regen_power = 0
     local refresh_power = 0
 
