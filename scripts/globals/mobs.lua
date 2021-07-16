@@ -9,6 +9,7 @@ require("scripts/globals/magic")
 require("scripts/globals/utils")
 require("scripts/globals/zone")
 require("scripts/globals/msg")
+require("scripts/globals/settings")
 -----------------------------------
 
 xi = xi or {}
@@ -61,6 +62,8 @@ end
 -- potential lottery placeholder was killed
 xi.mob.phOnDespawn = function(ph, phList, chance, cooldown, immediate)
     if type(immediate) ~= "boolean" then immediate = false end
+
+    if DISABLE_LOTTERY_NM_SYSTEM == 1 then return false end
 
     if xi.settings.NM_LOTTERY_CHANCE then
         chance = xi.settings.NM_LOTTERY_CHANCE >= 0 and (chance * xi.settings.NM_LOTTERY_CHANCE) or 100
