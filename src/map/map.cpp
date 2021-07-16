@@ -1022,6 +1022,7 @@ int32 map_config_default()
     map_config.all_jobs_widescan           = true;
     map_config.speed_mod                   = 0;
     map_config.mount_speed_mod             = 0;
+    map_config.city_speed_mod              = 0;
     map_config.mob_speed_mod               = 0;
     map_config.skillup_chance_multiplier   = 1.0f;
     map_config.craft_chance_multiplier     = 1.0f;
@@ -1341,6 +1342,10 @@ int32 map_config_read(const int8* cfgName)
         {
             map_config.speed_mod = atoi(w2);
         }
+        else if (strcmp(w1, "city_speed_mod") == 0)
+        {
+            map_config.city_speed_mod = atoi(w2);
+        }
         else if (strcmp(w1, "mount_speed_mod") == 0)
         {
             map_config.mount_speed_mod = atoi(w2);
@@ -1504,6 +1509,10 @@ int32 map_config_read(const int8* cfgName)
         else if (strcmp(w1, "daily_tally_limit") == 0)
         {
             map_config.daily_tally_limit = atoi(w2);
+        }
+        else if (strcmp(w1, "blue_spell_learn_chance") == 0)
+        {
+            map_config.blue_spell_learn_chance = atoi(w2);
         }
         else
         {

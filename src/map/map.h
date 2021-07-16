@@ -91,6 +91,7 @@ struct map_config_t
     bool        disable_gear_scaling;        // Disables ability to equip higher level gear when level cap/sync effect is on player.
     bool        all_jobs_widescan;           // Enable/disable jobs other than BST and RNG having widescan.
     int8        speed_mod;                   // Modifier to add to player speed
+    int8        city_speed_mod;              // Modifier to add to player speed when in a city
     int8        mount_speed_mod;             // Modifier to add to mount speed
     int8        mob_speed_mod;               // Modifier to add to monster speed
     float       skillup_chance_multiplier;   // Constant used in the skillup formula that has a strong effect on skill-up rates
@@ -151,6 +152,7 @@ struct map_config_t
     bool        anticheat_jail_disable; // Globally disable auto-jailing by the anti-cheat system
     uint16      daily_tally_amount;     // Amount of daily tally points given at midnight for Gobbie Mystery Box
     uint16      daily_tally_limit;      // Upper limit of daily tally points for Gobbie Mystery Box
+    int16  blue_spell_learn_chance;     // Increase chance to learn blue spells.
 };
 
 /************************************************************************
