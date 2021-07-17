@@ -25,6 +25,7 @@
 #include "../packets/char_spells.h"
 
 #include <cmath>
+#include "../map.h"
 
 #include "../packets/char_health.h"
 #include "../packets/char_stats.h"
@@ -145,7 +146,7 @@ namespace blueutils
                 // make sure the difference between spell skill and player is at most 31 points
                 if (playerSkillLvl >= skillLvlForSpell - 31)
                 {
-                    auto chanceToLearn = 33 + PBlueMage->getMod(Mod::BLUE_LEARN_CHANCE);
+                    auto chanceToLearn = 33 + PBlueMage->getMod(Mod::BLUE_LEARN_CHANCE) + map_config.blue_spell_learn_chance;
                     if (xirand::GetRandomNumber(100) < chanceToLearn)
                     {
                         if (charutils::addSpell(PBlueMage, static_cast<uint16>(PSpell->getID())))
