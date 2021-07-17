@@ -9,7 +9,7 @@ xi = xi or {}
 xi.ephemeral = {}
 
 -- Cap per crystal type that can be stored. Retail/Default is 5000
-local CrystalCap = 5000
+local CrystalCap = 50000
 
 -- Information for currency storage and event params
 local crystalData =
