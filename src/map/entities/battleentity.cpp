@@ -225,9 +225,9 @@ uint8 CBattleEntity::GetSpeed()
     int16 startingSpeed = isMounted() ? 40 + map_config.mount_speed_mod : speed;
 
     //add city movement bonus
-    if (objType == TYPE_PC || objtype == TYPE_PET)
+    if (objtype == TYPE_PC || objtype == TYPE_PET)
     {
-        startingSpeed = loc.zone->GetType() == ZONE_TYPE::CITY) ? startingSpeed += map_config.city_speed_mod : startingSpeed
+        startingSpeed = loc.zone->GetType() == ZONE_TYPE::CITY ? startingSpeed += map_config.city_speed_mod : startingSpeed;
     }
 
     // Mod::MOVE (169)
