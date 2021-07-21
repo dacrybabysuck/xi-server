@@ -23,8 +23,8 @@ effect_object.onEffectGain = function(target, effect)
     target:setCharVar("SIGNET_REGEN_BONUS", power[1])
     target:setCharVar("SIGNET_REFRESH_BONUS", power[2])
 
-    target:addMod(tpz.mod.REGEN, power[1])
-    target:addMod(tpz.mod.REFRESH, power[2])
+    target:addMod(xi.mod.REGEN, power[1])
+    target:addMod(xi.mod.REFRESH, power[2])
 
 end
 
@@ -46,8 +46,8 @@ effect_object.onEffectLose = function(target, effect)
     local regen_power = target:getCharVar("SIGNET_REGEN_BONUS")
     local refresh_power = target:getCharVar("SIGNET_REFRESH_BONUS")
 
-    target:delMod(tpz.mod.REGEN, regen_power)
-    target:delMod(tpz.mod.REFRESH, refresh_power)
+    target:delMod(xi.mod.REGEN, regen_power)
+    target:delMod(xi.mod.REFRESH, refresh_power)
 end
 
 function getPower(target)
