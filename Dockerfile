@@ -1,43 +1,38 @@
-FROM ubuntu:20.04 as builder
-
-RUN apt-get update; \
-    DEBIAN_FRONTEND=noninteractive \
-    apt install -y build-essential software-properties-common g++-9 \
-    luarocks cmake g++ git libluajit-5.1-dev libzmq3-dev \
-    autoconf pkg-config zlib1g-dev libssl-dev libmariadb-dev-compat;
-
-RUN mkdir /xi-server
-COPY ./ /xi-server
-
-RUN cd /xi-server ;\
-    export CC=/usr/bin/gcc-9 ;\
-    export CXX=/usr/bin/g++-9 ;\
-    ls -la ;\
-    CFLAGS=-m64 CXXFLAGS=-m64 LDFLAGS=-m64 cmake . ;\
-    make -j $(nproc);
-
-COPY .env .
-COPY configure_conf_files.sh .
-RUN bash configure_conf_files.sh
-
 FROM ubuntu:20.04
-RUN apt-get update; \
-    apt-get install -y libmariadb-dev-compat libluajit-5.1-dev libzmq3-dev;
 
-WORKDIR /xi-server
+RUN apt clean
 
-COPY --from=builder /xi-server/conf/default ./conf
-COPY --from=builder /xi-server/topaz_game .
-COPY --from=builder /xi-server/compress.dat .
-COPY --from=builder /xi-server/decompress.dat .
-COPY --from=builder /xi-server/scripts ./scripts
-COPY --from=builder /xi-server/log ./log
-#COPY --from=builder /xi-server/lib ./lib
-#COPY --from=builder /xi-server/lib64 ./lib64
-COPY --from=builder /xi-server/navmeshes ./navmeshes
+# Avoid any UI since we don't have one
+ENV DEBIAN_FRONTEND=noninteractive
 
-VOLUME /xi-server/scripts
+# Set env variables to override the configuration settings
+ENV XI_DB_HOST=db
+ENV XI_DB_PORT=3306
+ENV XI_DB_USER=xiuser
+ENV XI_DB_USER_PASSWD=xipassword
+ENV XI_DB_NAME=xidb
 
-EXPOSE 54230/udp
+# Working directory will be /server meaning that the contents of server will exist in /server
+WORKDIR /server
 
-CMD ["./topaz_game"]
+# Update and install all requirements as well as some useful tools such as net-tools and nano
+RUN apt update && apt install -y net-tools nano software-properties-common git python3 python3-pip clang-11 cmake make libluajit-5.1-dev libzmq3-dev libssl-dev zlib1g-dev mariadb-server libmariadb-dev luarocks
+
+# Use Clang 11
+ENV CC=/usr/bin/clang-11
+ENV CXX=/usr/bin/clang++-11
+
+# Copy everything from the host machine server folder to /server
+ADD . /server
+
+# Configure and build
+RUN mkdir docker_build && cd docker_build && cmake .. && make -j $(nproc)  && cd .. && rm -r /server/docker_build
+
+# Copy the docker config files to the conf folder instead of the default config
+COPY /conf/default/* conf/
+
+# Ensure wait_for_db_then_launch.sh is executable
+RUN chmod +x ./tools/wait_for_db_then_launch.sh
+
+# Startup the server when the container starts
+ENTRYPOINT ./tools/wait_for_db_then_launch.sh
